@@ -33,7 +33,7 @@ class Guide
 	def get_action
 		user_action = nil
 		until @@actions.include?(user_action)
-			puts "Actions : " + @@actions.join(", ")
+			puts "\nActions : " + @@actions.join(", ")
 			print "> "
 			user_action = gets.chomp.downcase.strip
 		end		
@@ -55,12 +55,22 @@ class Guide
 			puts "Listing all shops\n \n"
 		when 'find'
 			puts "Finding"
-		when 'add'
-			puts "Adding"
+		when 'add'			
+			add
 		when 'quit'
 			return :quit
 		else
-			puts "Please enter correct choice"
+			puts "\nPlease enter correct choice\n\n"
 		end
 	end	
+	
+	def add
+		puts "\n\t\t\t<<< Add a Shop >>>\n\n"
+		shop = Shop.build_from_input
+		if shop.save
+			puts "\n\t\t\t<<< Shop Successfully Added >>>\n\n"
+		else
+			"\nShop could not be saved\n\n"
+		end
+	end
 end

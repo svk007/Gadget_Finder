@@ -1,6 +1,15 @@
 class Shop
 	@@filepath = nil
 	
+	attr_accessor :name , :type , :price , :rate
+	
+	def initialize(args={})
+		@name = args[:name] || ""
+		@type = args[:type] || ""
+		@price = args[:price] || ""
+		@rate = args[:rate] || ""
+	end	
+
 	def self.filepath=(path=nil)
 		@@filepath = File.join(APP_ROOT, path)
 	end
@@ -11,14 +20,43 @@ class Shop
 			return true
 		end
 	end
-		
+
 	def self.create_file
 		#create if it does not exist
 		File.open(@@filepath, 'w') unless file_exists?
 		return file_exists?
 	end
-	
+
 	def self.saved_shops
 		#return shops and other details by reading the file
 	end
+	
+	def self.build_from_input
+		args = {}
+		puts "\nName of Shop :"
+		print "> "
+		args[:name] = gets.chomp.strip
+		
+		puts "\nType of Gadget Found :"
+		print "> "
+		args[:type] = gets.chomp.strip
+		
+		puts "\nAverage Price :"
+		print "> "
+		args[:price] = gets.chomp.strip
+		
+		puts "\nRate on 5 stars :"
+		print "> "
+		args[:rate] = gets.chomp.strip
+		
+		return self.new(args)
+	end	
+      
+      def save
+            File.open(@@filepath , 'a') do |file|
+                  file.puts "#{[@name, @type, @price, @rate].join("\t")}\n"
+		end
+		return true
+      end
+      
 end
