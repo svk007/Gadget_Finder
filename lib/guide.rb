@@ -52,10 +52,10 @@ class Guide
 	def do_action(action)
 		case action
 		when 'list'
-			puts "Listing all shops\n \n"
+			list
 		when 'find'
 			puts "Finding"
-		when 'add'			
+		when 'add'
 			add
 		when 'quit'
 			return :quit
@@ -73,4 +73,12 @@ class Guide
 			"\nShop could not be saved\n\n"
 		end
 	end
+	
+	def list
+		puts "Listing shops"
+		shop = Shop.saved_shops
+		shop.each do |shop|
+			puts "#{shop.name} | #{shop.type} | #{shop.price} | #{shop.rate}"
+		end
+	end	
 end

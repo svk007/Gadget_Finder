@@ -29,6 +29,13 @@ class Shop
 
 	def self.saved_shops
 		#return shops and other details by reading the file
+		shops = []
+		file = File.new(@@filepath , 'r')
+		file.each_line do |line|
+			shops << Shop.new.import_line(line)
+		end
+		file.close
+		return shops
 	end
 	
 	def self.build_from_input
@@ -50,8 +57,14 @@ class Shop
 		args[:rate] = gets.chomp.strip
 		
 		return self.new(args)
-	end	
-      
+	end
+	
+	def import_line(line)
+		array = line.split("\t")
+		@name , @type, @price, @rate = array
+		return self
+	end
+	      
       def save
             File.open(@@filepath , 'a') do |file|
                   file.puts "#{[@name, @type, @price, @rate].join("\t")}\n"
