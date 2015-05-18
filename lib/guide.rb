@@ -23,8 +23,8 @@ class Guide
 		#action loop
 		result = nil
 		until result == :quit
-			user_action = get_action
-			result  = do_action(user_action)	
+			user_action, args = get_action
+			result  = do_action(user_action, args)	
 		#loop until quit
 		end
 		conclusion
@@ -35,9 +35,10 @@ class Guide
 		until @@actions.include?(user_action)
 			puts "\nActions : " + @@actions.join(", ")
 			print "> "
-			user_action = gets.chomp.downcase.strip
+			args = gets.chomp.downcase.strip.split(' ')
+			user_action = args.shift
 		end		
-		return user_action
+		return user_action, args
 	end
 	
 	def introduction
@@ -49,12 +50,13 @@ class Guide
 		puts_formatted("Sure you found what you were looking for. Enjoy shopping!")
 	end
 	
-	def do_action(action)
+	def do_action(action, args)
 		case action
 		when 'list'
-			list
+			list(args)
 		when 'find'
-			puts "Finding"
+		     keyword = args.shift
+			find(keyword)
 		when 'add'
 			add
 		when 'quit'
@@ -74,10 +76,45 @@ class Guide
 		end
 	end
 	
-	def list
+	 def find(keyword="")
+	    puts_formatted("Find a restaurant")
+	    if keyword
+		 shops = Shop.saved_shops
+		 found = shops.select do |shop|
+		   shop.name.downcase.include?(keyword.downcase) || 
+		   shop.type.downcase.include?(keyword.downcase) || 
+		   shop.price.to_i <= keyword.to_i
+		 end
+		 output_table(found)
+	    else
+		 list
+		 puts "Examples: 'find bose', 'find headphone', 'find 10000', 'find east'\n\n"
+	    end
+	end
+
+	def list(args=[])
+		sort_order = args.shift
+		sort_order = args.shift if sort_order ='by'
+		sort_order = "name" unless ['name', 'type', 'price', 'rate'].include?(sort_order)
+		
 		puts_formatted("Listing shops")
 		shop = Shop.saved_shops
+		
+		shop.sort! do |s1,s2|
+			case sort_order
+				when 'name'
+					s1.name.downcase <=> s2.name.downcase
+				when 'type'
+					s1.type.downcase <=> s2.type.downcase
+				when 'price'
+				s1.price.to_i <=> s2.price.to_i
+				when 'rate'
+				s2.rate.to_i <=> s1.rate.to_i
+			end
+		end
+		
 		output_table(shop)
+		puts "Table can be listed by 'list type' or 'list by type'"
 	end
 	
 	private
