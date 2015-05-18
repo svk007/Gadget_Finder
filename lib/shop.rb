@@ -1,8 +1,11 @@
+require 'support/number_helper'
+
 class Shop
+	include NumberHelper
+	
 	@@filepath = nil
-	
 	attr_accessor :name , :type , :price , :rate
-	
+		
 	def initialize(args={})
 		@name = args[:name] || ""
 		@type = args[:type] || ""
@@ -65,11 +68,18 @@ class Shop
 		return self
 	end
 	      
-      def save
+        def save
             File.open(@@filepath , 'a') do |file|
                   file.puts "#{[@name, @type, @price, @rate].join("\t")}\n"
 		end
 		return true
-      end
-      
+        end
+
+	def formatted_price
+		number_to_currency(@price)
+	end
+
+	def formatted_rate
+		number_to_stars(@rate)
+	end
 end

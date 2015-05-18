@@ -1,3 +1,5 @@
-Pinnacle Appliances	TV	20000	4
-Great Eastern Appliances	TV	30000	4.5
+Pinnacle Appliances	TV	20000	3
+Great Eastern Appliances	TV	30000	4
 Bose Sound Systems	Speakers	15000	4
+Finolex Mobiles	Cellphones	15000	2
+e mall	headphones	5000	4

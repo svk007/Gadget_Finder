@@ -1,5 +1,5 @@
 require 'shop'
-
+require 'support/string_extend'
 class Guide
 	
 	@@actions = ['list' , 'add', 'find', 'quit']
@@ -7,7 +7,7 @@ class Guide
 		#Look for file
 		Shop.filepath = path
 		if Shop.file_exists?
-			puts "Found Shops file  "
+			puts "Found Shops file"
 		#Create file if not present
 		elsif Shop.create_file
 			puts "Created file"
@@ -41,12 +41,12 @@ class Guide
 	end
 	
 	def introduction
-		puts "\n\n\t\t\t<<< Welcome to the Gadget Finder. >>> \n"
-		puts "This application allows you to select your desired gadget from a range of shops \n\n"
+		puts_formatted("Welcome to the Gadget Finder.")
+		puts "This application allows you to select your desired gadget from a range of shops"
 	end
 	
 	def conclusion
-		puts "\n\n\t<<< Sure you found what you are looking for. Enjoy shopping! >>>\n\n"
+		puts_formatted("Sure you found what you were looking for. Enjoy shopping!")
 	end
 	
 	def do_action(action)
@@ -60,25 +60,47 @@ class Guide
 		when 'quit'
 			return :quit
 		else
-			puts "\nPlease enter correct choice\n\n"
+			puts_formatted("Please enter correct choice")
 		end
 	end	
 	
 	def add
-		puts "\n\t\t\t<<< Add a Shop >>>\n\n"
+		puts_formatted("Add a Shop")
 		shop = Shop.build_from_input
 		if shop.save
-			puts "\n\t\t\t<<< Shop Successfully Added >>>\n\n"
+			puts_formatted("Shop Successfully Added")
 		else
-			"\nShop could not be saved\n\n"
+			puts_formatted("Shop could not be saved")
 		end
 	end
 	
 	def list
-		puts "Listing shops"
+		puts_formatted("Listing shops")
 		shop = Shop.saved_shops
-		shop.each do |shop|
-			puts "#{shop.name} | #{shop.type} | #{shop.price} | #{shop.rate}"
-		end
-	end	
+		output_table(shop)
+	end
+	
+	private
+	
+	def puts_formatted(text)
+		puts "\n<<< #{text.upcase.center(70)} >>>\n\n"
+	end
+	
+	def output_table(shops=[])
+	    puts "-" * 70
+	    print " " + "Name".ljust(30)
+	    print " " + "Type".ljust(15)
+	    print " " + "Price".ljust(12)
+	    print " " + "Rating".rjust(6) + "\n"
+	    puts "-" * 70
+	    shops.each do |shop|
+	      line =  " " << shop.name.titleize.ljust(30)
+	      line << " " + shop.type.titleize.ljust(15)
+	      line << " " + shop.formatted_price.ljust(12)
+		 line << " " + shop.formatted_rate.titleize.rjust(6)
+	      puts line
+	    end
+	    puts "No listings found" if shops.empty?
+	    puts "-" * 70
+	end
 end
