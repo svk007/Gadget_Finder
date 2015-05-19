@@ -28,14 +28,15 @@ module NumberHelper
       # make sure the decimal is not too short
       precise_decimal = decimal.ljust(precision, "0")
     end
-    
+
     return unit + integer + separator + precise_decimal
   end
-  
+
   def number_to_stars(number)
-	number=number.to_i
-	a = ''
-	1.upto(number) { a << '*' }
-	return a
+    number=number.to_i
+    a = ''
+    1.upto(number) { a << '*' }
+    return a
   end
+
 end

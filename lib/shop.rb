@@ -5,7 +5,7 @@ class Shop
 	
 	@@filepath = nil
 	attr_accessor :name , :type , :price , :rate
-		
+	
 	def initialize(args={})
 		@name = args[:name] || ""
 		@type = args[:type] || ""
@@ -67,13 +67,13 @@ class Shop
 		@name , @type, @price, @rate = array
 		return self
 	end
-	      
-        def save
-            File.open(@@filepath , 'a') do |file|
-                  file.puts "#{[@name, @type, @price, @rate].join("\t")}\n"
+	
+	def save
+		File.open(@@filepath , 'a') do |file|
+			file.puts "#{[@name, @type, @price, @rate].join("\t")}\n"
 		end
 		return true
-        end
+	end
 
 	def formatted_price
 		number_to_currency(@price)
